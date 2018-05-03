@@ -11,7 +11,7 @@ import java.util.Date;
 @RequestMapping("/index")
 public class IndexController {
 
-    @Autowrited
+    @Autowrited()
     private IndexService indexService;
 
     @RequestMapping("home")

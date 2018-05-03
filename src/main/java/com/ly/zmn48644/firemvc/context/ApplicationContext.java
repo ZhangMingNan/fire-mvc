@@ -26,6 +26,8 @@ public class ApplicationContext implements BeanFactory {
 
     private Map<String, BeanWrapper> beanWrapperMap = new HashMap<>();
 
+    private Map<String, Object> beanCacheMap = new HashMap<>();
+
     public ApplicationContext(String configLocation) {
         this.configLocation = configLocation;
         refresh();
@@ -73,8 +75,8 @@ public class ApplicationContext implements BeanFactory {
                             beanName = field.getType().getName();
                         }
                         field.setAccessible(true);
-                        System.out.println(beanName);
-                        if ( beanWrapperMap.get(beanName)!=null){
+
+                        if (beanWrapperMap.get(beanName) != null) {
                             field.set(instance, beanWrapperMap.get(beanName).getOriginalInstance());
                         }
 
@@ -98,12 +100,10 @@ public class ApplicationContext implements BeanFactory {
                 }
                 BeanDefinition beanDefinition = this.reader.registerBean(className);
                 beanDefinitionMap.put(beanDefinition.getFactoryBeanName(), beanDefinition);
-
                 //实现了多个接口则会覆盖
                 for (Class<?> interfaceName : clazz.getInterfaces()) {
                     beanDefinitionMap.put(interfaceName.getName(), beanDefinition);
                 }
-
             } catch (ClassNotFoundException e) {
 
             }
@@ -115,12 +115,12 @@ public class ApplicationContext implements BeanFactory {
         BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
         if (beanDefinition != null) {
             try {
-                Class<?> clazz = Resources.classForName(beanDefinition.getBeanClassName());
                 BeanWrapper beanWrapper = new BeanWrapper();
-                Object instance = clazz.newInstance();
+                Object instance = instantionBean(beanDefinition);
                 beanWrapper.setOriginalInstance(instance);
                 beanWrapper.setWrapperInstance(instance);
-                beanWrapperMap.put(beanDefinition.getFactoryBeanName(), beanWrapper);
+
+                beanWrapperMap.put(beanName, beanWrapper);
                 return beanWrapper.getOriginalInstance();
             } catch (Exception e) {
 
@@ -128,4 +128,27 @@ public class ApplicationContext implements BeanFactory {
         }
         return null;
     }
+
+    private Object instantionBean(BeanDefinition beanDefinition) throws Exception {
+
+        if (beanCacheMap.containsKey(beanDefinition.getFactoryBeanName())) {
+            return beanCacheMap.get(beanDefinition.getFactoryBeanName());
+        } else {
+            Class<?> clazz = Resources.classForName(beanDefinition.getBeanClassName());
+            Object obj = clazz.newInstance();
+            beanCacheMap.put(beanDefinition.getFactoryBeanName(), obj);
+            return obj;
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
