@@ -20,7 +20,7 @@ public class BeanDefinitionReader {
 
     public BeanDefinitionReader(String configLocation) {
         try {
-            config = Resources.getResourceAsProperties(configLocation);
+            config = Resources.getResourceAsProperties(configLocation.substring(configLocation.indexOf(":")+1));
         } catch (IOException e) {
 
         }

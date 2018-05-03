@@ -140,6 +140,10 @@ public class ApplicationContext implements BeanFactory {
             return obj;
         }
     }
+
+    public String[] getBeanNames() {
+        return beanDefinitionMap.keySet().toArray(new String[this.beanDefinitionMap.size()]);
+    }
 }
 
 

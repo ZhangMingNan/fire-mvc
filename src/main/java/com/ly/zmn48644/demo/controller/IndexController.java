@@ -14,7 +14,7 @@ public class IndexController {
     @Autowrited()
     private IndexService indexService;
 
-    @RequestMapping("home")
+    @RequestMapping("/home")
     public void home() {
         Date date = indexService.localTime();
         System.out.println("当前时间:" + date);
