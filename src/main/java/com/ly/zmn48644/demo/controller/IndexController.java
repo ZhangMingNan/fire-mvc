@@ -4,6 +4,8 @@ import com.ly.zmn48644.demo.service.IndexService;
 import com.ly.zmn48644.firemvc.annotation.Autowrited;
 import com.ly.zmn48644.firemvc.annotation.Controller;
 import com.ly.zmn48644.firemvc.annotation.RequestMapping;
+import com.ly.zmn48644.firemvc.annotation.RequestParam;
+import com.ly.zmn48644.firemvc.webmvc.ModelAndView;
 
 import java.util.Date;
 
@@ -15,9 +17,15 @@ public class IndexController {
     private IndexService indexService;
 
     @RequestMapping("/home")
-    public void home() {
+    public ModelAndView home(@RequestParam("city") String city, @RequestParam("country") String country) {
         Date date = indexService.localTime();
-        System.out.println("当前时间:" + date);
+        System.out.println(city + ":当前时间:" + date);
+
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setView("home");
+        modelAndView.addAttribute("city",city);
+        modelAndView.addAttribute("country",country);
+        return modelAndView;
     }
 
     public IndexService getIndexService() {

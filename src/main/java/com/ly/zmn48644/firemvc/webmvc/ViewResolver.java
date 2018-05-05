@@ -1,6 +1,11 @@
 package com.ly.zmn48644.firemvc.webmvc;
 
+import com.google.common.base.Charsets;
+import com.google.common.io.Files;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.File;
+import java.io.IOException;
 
 public class ViewResolver {
 
@@ -8,9 +13,19 @@ public class ViewResolver {
 
     private File template;
 
-    public String resolver(ModelAndView modelAndView){
+    public String resolver(ModelAndView modelAndView) {
+        StringBuilder sb = new StringBuilder();
+        try {
+            for (String line : Files.readLines(template, Charsets.UTF_8)) {
+                for (String key : modelAndView.getModel().keySet()) {
+                    line = StringUtils.replace(line, "${" + key + "}", modelAndView.getModel().get(key).toString());
+                }
+                sb.append(line);
+            }
+        } catch (IOException e) {
 
-        return null;
+        }
+        return sb.toString();
     }
 
     public ViewResolver(String view, File template) {

@@ -2,6 +2,7 @@ package com.ly.zmn48644.firemvc.webmvc;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class ModelAndView {
 
@@ -23,5 +24,9 @@ public class ModelAndView {
 
     public void setModel(Map<String, Object> model) {
         this.model = model;
+    }
+
+    public void addAttribute(String key, Object value) {
+        model.put(key, value);
     }
 }
